@@ -83,7 +83,7 @@ module ROXML # :nodoc:
       def xml_namespace(namespace)
         @roxml_namespace = namespace.to_s
       end
-      
+
       # Sets up a mapping of namespace prefixes to hrefs, to be used by this class.
       # These namespace prefixes are independent of what appears in the xml, only
       # the namespace hrefs themselves need to match
@@ -470,8 +470,8 @@ module ROXML # :nodoc:
       # Note that while xml_reader does not create a setter for this attribute,
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
-      def xml_reader(*syms, &block)
-        xml_attr(*syms, &block).each do |attr|
+      def xml_reader(*syms, **opts, &block)
+        xml_attr(*syms, **opts, &block).each do |attr|
           add_reader(attr)
         end
       end
@@ -481,8 +481,8 @@ module ROXML # :nodoc:
       # Note that while xml_accessor does create a setter for this attribute,
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
-      def xml_accessor(*syms, &block)
-        xml_attr(*syms, &block).each do |attr|
+      def xml_accessor(*syms, **opts, &block)
+        xml_attr(*syms, **opts, &block).each do |attr|
           add_reader(attr)
           attr_writer(attr.attr_name)
         end
@@ -510,7 +510,7 @@ module ROXML # :nodoc:
       # do not work without one.
       def tag_name
         return roxml_tag_name if roxml_tag_name
-        
+
         if tag_name = name.split('::').last
           roxml_naming_convention ? roxml_naming_convention.call(roxml_inflector.underscore(tag_name)) : tag_name.downcase
         end
